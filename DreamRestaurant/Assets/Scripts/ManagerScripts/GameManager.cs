@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance ;
+    public static GameManager Instance;
      public enum GameState
      {
         Menu,
@@ -47,7 +45,7 @@ public class GameManager : MonoBehaviour
 
             case GameState.Win:
                 UserDataManager.instance.SaveCurrentLevelCount();
-                UIManager.instance.NextSceneButtonSetActive();
+
                 break;
 
             default:

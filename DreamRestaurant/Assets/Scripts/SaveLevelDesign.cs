@@ -1,11 +1,10 @@
 ﻿using System.IO;
 using UnityEngine;
-
 public static class SaveLevelDesign
 {    
-    public static readonly string path = Application.dataPath + "/Saves/";
-    const string TEMPORARYJSON = "tenporarySave.json";
-    const string PERMANENTJSON = "Saves.json";
+    public static readonly string path = Application.dataPath + "/TemporarySaves/";
+    const string TEMPORARYJSON = "temporarySave.json";
+    const string PERMANENTJSON = "Saves";
 
     public static void Init()
     {
@@ -21,15 +20,18 @@ public static class SaveLevelDesign
  
     public static string Load()
     {
-        if (File.Exists(path + PERMANENTJSON))
-        {
-            var s = File.ReadAllText(path + PERMANENTJSON);
-            return s;
-        }
-        else
-        {
-            return null;
-        }
+        TextAsset file = Resources.Load("Saves/" + PERMANENTJSON) as TextAsset;
+        string json = file.text;
+        return json;
+        //if (File.Exists(path + PERMANENTJSON))
+        //{
+        //    var s = File.ReadAllText(path + PERMANENTJSON);
+        //    return s;
+        //}
+        //else
+        //{
+        //    return null;
+        //}
     }
 
 }

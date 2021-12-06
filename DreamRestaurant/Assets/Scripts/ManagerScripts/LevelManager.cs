@@ -17,7 +17,6 @@ public class LevelManager : MonoBehaviour
     public int LEVELCOUNT { get { levelCount = PlayerPrefs.GetInt("levelCount"); return levelCount; } set { levelCount = value; PlayerPrefs.SetInt("levelCount", value); } }
     public int CURRENTLEVEL { get { currentLevel = PlayerPrefs.GetInt("Level"); return currentLevel; } set { currentLevel = value; PlayerPrefs.SetInt("Level", value); } }
 
-    public const int TOTALLEVELCOUNT = 10;
 
     public List<LevelData> levelData;
     [HideInInspector]
@@ -45,31 +44,49 @@ public class LevelManager : MonoBehaviour
             Destroy(loadedLevel);
             loadedLevel = null;
         }
-        SpawnLevel();
-      
+        SpawnLevel();      
     }
     public void SpawnLevel()
     {
-        for (int i = 0; i < LevelManager.Instance.data.Count; i++)
+        for (int i = 0; i < data.Count; i++)
         {
             if (CURRENTLEVEL == i)
             {
-                var count = LevelManager.Instance.data[i].objectsInLevels.Count;
+                var objectCount = data[i].objectsInLevels.Count;
+                var GameUiCount = data[i].gamePlayUis.Count;
 
-                for (int j = 0; j < count; j++)
+                for (int j = 0; j < objectCount; j++)
                 {
 
-                    for (int k = 0; k < LevelManager.Instance.data[i].objectsInLevels[j].sceneObjects.Count; k++)
+                    for (int k = 0; k < data[i].objectsInLevels[j].sceneObjects.Count; k++)
                     {
                        
-                        var gameObject = LeanPool.Spawn(Resources.Load("Levels/" + LevelManager.Instance.data[i].objectsInLevels[j].SceneObjectName) as GameObject);
-                        
+                        var gameObject = LeanPool.Spawn(Resources.Load("Levels/" + data[i].objectsInLevels[j].sceneObjectName) as GameObject);
 
-                        gameObject.transform.position = LevelManager.Instance.data[i].objectsInLevels[j].sceneObjectTransformPosition[k];
-                        gameObject.transform.localScale = LevelManager.Instance.data[i].objectsInLevels[j].sceneObjectTransformScale[k];
-                        gameObject.transform.rotation = LevelManager.Instance.data[i].objectsInLevels[j].sceneObjectTransformRotation[k];
+                        gameObject.transform.position = data[i].objectsInLevels[j].sceneObjectTransformPosition[k];
+                        gameObject.transform.localScale = data[i].objectsInLevels[j].sceneObjectTransformScale[k];
+                        gameObject.transform.rotation = data[i].objectsInLevels[j].sceneObjectTransformRotation[k];
                     }
 
+                }
+                for (int a = 0; a < GameUiCount; a++)
+                {
+                    for (int b = 0; b < data[i].gamePlayUis[a].moneyGetPlaces.Count; b++)
+                    {
+                        var gameObject = LeanPool.Spawn(Resources.Load("MoneyPlaces/" + data[i].gamePlayUis[a].moneyGetPlaces[b].getPlaces.tag) as GameObject);
+
+                        gameObject.transform.position = data[i].gamePlayUis[a].moneyPlacesTransformPosition[b];
+                        gameObject.transform.localScale = data[i].gamePlayUis[a].moneyPlacesTransformScale[b];
+                        gameObject.transform.rotation = data[i].gamePlayUis[a].moneyPlacesTransformRotation[b];
+                    }
+                    for (int c = 0; c < data[i].gamePlayUis[a].moneySpendPlaces.Count; c++)
+                    {
+                        var gameObject = LeanPool.Spawn(Resources.Load("MoneyPlaces/" + data[i].gamePlayUis[a].moneySpendPlaces[c].spendPlaces.tag) as GameObject);
+
+                        gameObject.transform.position = data[i].gamePlayUis[a].spendPlacesTransformPosition[c];
+                        gameObject.transform.localScale = data[i].gamePlayUis[a].spendPlacesTransformScale[c];
+                        gameObject.transform.rotation = data[i].gamePlayUis[a].spendPlacesTransformRotation[c];
+                    }
                 }
             }
         }
@@ -82,7 +99,7 @@ public class LevelManager : MonoBehaviour
         {
             CURRENTLEVEL = 0;
         }
-        LoadLevel();
+        //LoadLevel();
     }
     private void AssignInstance()
     {
@@ -123,9 +140,15 @@ public class LevelManager : MonoBehaviour
     {
         for (int i = 0; i < levelData.Count; i++)
         {
+
             for (int j = 0; j < levelData[i].objectsInLevels.Count; j++)
             {
                 levelData[i].objectsInLevels[j].AssignSceneObjectsTransform();
+            }
+            for (int k = 0; k < levelData[i].gamePlayUis.Count; k++)
+            {
+                levelData[i].gamePlayUis[k].AssignUIObjectsTransform();
+                levelData[i].gamePlayUis[k].AssignSpendPlaceData();
             }
         }
     }
@@ -134,12 +157,9 @@ public class LevelManager : MonoBehaviour
 [System.Serializable]
 public class LevelData
 {
-    public string name;
-    public float rayDistance;
-    //public Stage stage;
-    //public DragObjectTypes dragObjectTypes;
+    public string LevelName;
+    public List<GamePlayUI> gamePlayUis;
     public List<ObjectsInLevel> objectsInLevels;
-
 }
 
 [System.Serializable]
@@ -148,7 +168,7 @@ public struct ObjectsInLevel
     public string name;
 
     public List<GameObject> sceneObjects;
-    public string SceneObjectName;
+    public string sceneObjectName;
     public List<Vector3> sceneObjectTransformPosition;
     public List<Quaternion> sceneObjectTransformRotation;
     public List<Vector3> sceneObjectTransformScale;
@@ -159,7 +179,61 @@ public struct ObjectsInLevel
             sceneObjectTransformPosition.Add(sceneObjects[i].transform.position);
             sceneObjectTransformRotation.Add(sceneObjects[i].transform.rotation);
             sceneObjectTransformScale.Add(sceneObjects[i].transform.localScale);
-        }
-        
+        }        
     }
+}
+[System.Serializable]
+public struct GamePlayUI
+{
+    [SerializeField] private string GamePlayUIname;
+    //public List<GameObject> moneyPlaces;
+    public List<MoneyGetPlace> moneyGetPlaces;
+    //public List<GameObject> spendPlaces;
+    public List<MoneySpendPlace> moneySpendPlaces;
+
+    [HideInInspector] public List<Vector3> moneyPlacesTransformPosition;
+    [HideInInspector] public List<Quaternion> moneyPlacesTransformRotation;
+    [HideInInspector] public List<Vector3> moneyPlacesTransformScale;
+
+    [HideInInspector] public List<Vector3> spendPlacesTransformPosition;
+    [HideInInspector] public List<Quaternion> spendPlacesTransformRotation;
+    [HideInInspector] public List<Vector3> spendPlacesTransformScale;
+    public void AssignUIObjectsTransform()
+    {
+        for (int i = 0; i < moneyGetPlaces.Count; i++)
+        {
+            moneyPlacesTransformPosition.Add(moneyGetPlaces[i].getPlaces.transform.position);
+            moneyPlacesTransformRotation.Add(moneyGetPlaces[i].getPlaces.transform.rotation);
+            moneyPlacesTransformScale.Add(moneyGetPlaces[i].getPlaces.transform.localScale);
+        }
+        for (int j = 0; j < moneySpendPlaces.Count; j++)
+        {
+            spendPlacesTransformPosition.Add(moneySpendPlaces[j].spendPlaces.transform.position);
+            spendPlacesTransformRotation.Add(moneySpendPlaces[j].spendPlaces.transform.rotation);
+            spendPlacesTransformScale.Add(moneySpendPlaces[j].spendPlaces.transform.localScale);
+        }
+    }
+    public void AssignSpendPlaceData()
+    {
+        for (int i = 0; i < moneySpendPlaces.Count; i++)
+        {
+            SpendPlace spendPlace = moneySpendPlaces[i].spendPlaces.GetComponent<SpendPlace>();
+            MoneySpendPlace moneySpendPlace = moneySpendPlaces[i];
+            moneySpendPlace.count = spendPlace.count;
+            moneySpendPlace.restaurantObjects = spendPlace.restaurantObjects;
+            moneySpendPlaces[i] = moneySpendPlace;
+        }
+    }
+}
+[System.Serializable]
+public struct MoneyGetPlace
+{
+    public GameObject getPlaces;    
+}
+[System.Serializable]
+public struct MoneySpendPlace
+{
+    public GameObject spendPlaces;
+    [HideInInspector] public int count;
+    [HideInInspector] public RestaurantObjects restaurantObjects;
 }

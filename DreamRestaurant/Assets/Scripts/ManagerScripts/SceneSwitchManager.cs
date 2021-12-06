@@ -19,20 +19,17 @@ public class SceneSwitchManager : MonoBehaviour
             Destroy(this);
         }
     }
-    public void RestartScene()
-    {
-        SceneManager.LoadScene(UserDataManager.instance.currentLevelCount);
-    }
     public void NextScene()
     {
-        if(UserDataManager.instance.currentLevelCount < LevelManager.TOTALLEVELCOUNT)
+        if(LevelManager.Instance.CURRENTLEVEL < LevelManager.TOTALLEVELS)
         {
-            SceneManager.LoadScene(0);
+            LevelManager.Instance.ChangeLevel();
+            SceneManager.LoadScene("Level");
         }
         else
         {
-            UserDataManager.instance.ResetCurrentLevelCount();
-            SceneManager.LoadScene(0);
+            LevelManager.Instance.ChangeLevel();
+            SceneManager.LoadScene("Level");
         }
        
     }

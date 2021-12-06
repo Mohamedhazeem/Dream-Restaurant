@@ -28,7 +28,7 @@ public class CameraManager : MonoBehaviour
     }
     private void Start()
     {
-       target = PlayerManager.instance.currentPlayer.transform;
+       target = PlayerManager.Instance.currentPlayer.transform;
 
        offset = primaryCamera.transform.position - target.transform.position;
     }

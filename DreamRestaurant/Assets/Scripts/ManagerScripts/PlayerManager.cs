@@ -1,10 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
-    public static PlayerManager instance;
+    public static PlayerManager Instance;
 
     [Header("Player Spawn Point")]
     public Transform playerSpawnPoint;
@@ -13,29 +12,23 @@ public class PlayerManager : MonoBehaviour
     [SerializeField]
     private GameObject playerPrefab;
     public GameObject currentPlayer;
-    public Material playerMaterial;
 
-    public PlayerStates currentPlayerStates;
+    public PlayerAnimationStates currentPlayerAnimationStates;
+    public PlayerMoneyState currentPlayerMoneyStates;
 
-    public List<GameObject> npc;
-
-    public float enemyrange;
-    public LayerMask layerMask;
-
-    public int Count;
-    private int currentCount;
-    private int temporaryCount = 0;
+    public Stack<GameObject> moneyStack = new Stack<GameObject>();
+    public Stack<Vector3> lastMoneyPosition = new Stack<Vector3>();
     private void Awake()
     {
         AssignInstance();
     }
     private void AssignInstance()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
         }
-        else if (instance != this)
+        else if (Instance != this)
         {
             Destroy(this);
         }
@@ -47,31 +40,37 @@ public class PlayerManager : MonoBehaviour
             currentPlayer = Instantiate(playerPrefab, playerSpawnPoint.position, Quaternion.identity);
         }
 
-        currentPlayerStates = PlayerStates.Idle;
+        currentPlayerAnimationStates = PlayerAnimationStates.Idle;
+        currentPlayerMoneyStates = PlayerMoneyState.BareHand;
     }
 
     public void SwitchPlayerStates()
     {
-        switch (currentPlayerStates)
+        switch (currentPlayerAnimationStates)
         {
-            case PlayerStates.Idle:
-                currentPlayerStates = PlayerStates.Running;
+            case PlayerAnimationStates.Idle:
+                currentPlayerAnimationStates = PlayerAnimationStates.Running;
                 break;
 
-            case PlayerStates.Running:
-                currentPlayerStates = PlayerStates.Idle;
+            case PlayerAnimationStates.Running:
+                currentPlayerAnimationStates = PlayerAnimationStates.Idle;
                 break;
 
-            case PlayerStates.Win:
+            case PlayerAnimationStates.Win:
                 break;
             default:
                 break;
         }
     }
 }   
-public enum PlayerStates
+public enum PlayerAnimationStates
 {
     Idle,
     Running,
     Win,
+}
+public enum PlayerMoneyState
+{
+    BareHand,
+    LoadWithMoney
 }
