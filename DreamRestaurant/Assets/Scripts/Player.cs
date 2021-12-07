@@ -68,12 +68,12 @@ public class Player : MonoBehaviour
             StartCoroutine(GetMoney());
             isTrigger = true;
         }
-        //else if (other.CompareTag("MoneySpendToUnlockObject") && !isSpendtrigger)
-        //{
-        //    spendPlaceToUnlockObject = other.GetComponent<SpendPlaceForUnlockObject>();
-        //    StartCoroutine(GiveMoney());
-        //    isSpendtrigger = true;
-        //}
+        else if (other.CompareTag("MoneySpendToUnlockObject") && !isSpendtrigger)
+        {
+            spendPlaceToUnlockObject = other.GetComponent<SpendPlaceForUnlockObject>();
+            StartCoroutine(GiveMoney());
+            isSpendtrigger = true;
+        }
         else if (other.CompareTag("MoneySpendToUnlockArea") && !isSpendtrigger)
         {
             spendPlaceToUnlockArea = other.GetComponent<SpendPlaceForUnlockArea>();
@@ -130,15 +130,15 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(1f);
         while (true)
         {
-            //if(PlayerManager.Instance.moneyStack.Count>0 && spendPlaceToUnlockObject.moneyAmount>=0)
-            //{
-            //    stackObject = PlayerManager.Instance.moneyStack.Pop();
-            //    MoneyManager.Instance.RemoveMoney(stackObject);
-            //    lastMoneyposition = PlayerManager.Instance.lastMoneyPosition.Pop();
-            //    lastMoneyposition -= stackMoneyOffset;
-            //    spendPlaceToUnlockObject.ReduceAmount();
-            //}
-            if(PlayerManager.Instance.moneyStack.Count > 0 && spendPlaceToUnlockArea.moneyAmount >= 0)
+            if (PlayerManager.Instance.moneyStack.Count > 0 && spendPlaceToUnlockObject!= null && spendPlaceToUnlockObject.moneyAmount >= 0)
+            {
+                stackObject = PlayerManager.Instance.moneyStack.Pop();
+                MoneyManager.Instance.RemoveMoney(stackObject);
+                lastMoneyposition = PlayerManager.Instance.lastMoneyPosition.Pop();
+                lastMoneyposition -= stackMoneyOffset;
+                spendPlaceToUnlockObject.ReduceAmount();
+            }
+            if (PlayerManager.Instance.moneyStack.Count > 0 && spendPlaceToUnlockArea != null && spendPlaceToUnlockArea.moneyAmount >= 0)
             {
                 stackObject = PlayerManager.Instance.moneyStack.Pop();
                 MoneyManager.Instance.RemoveMoney(stackObject);

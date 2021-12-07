@@ -8,17 +8,17 @@
                     "moneyGetPlaces": [
                         {
                             "getPlaces": {
-                                "instanceID": -26506
+                                "instanceID": 52008
                             }
                         }
                     ],
                     "moneySpendPlaceToUnlockObjects": [
                         {
                             "spendPlacesToUnlockObject": {
-                                "instanceID": -21196
+                                "instanceID": 51956
                             },
                             "prefab": {
-                                "instanceID": 14682
+                                "instanceID": 51988
                             },
                             "count": 10,
                             "restaurantObjects": 0
@@ -27,10 +27,10 @@
                     "moneySpendPlaceToUnlockAreas": [
                         {
                             "spendPlacesToUnlockArea": {
-                                "instanceID": -25960
+                                "instanceID": 52046
                             },
                             "prefab": {
-                                "instanceID": -25204
+                                "instanceID": 52044
                             },
                             "count": 50,
                             "unloackableAreas": 0
@@ -126,9 +126,9 @@
                     ],
                     "unlockableAreaPrefabTransformPosition": [
                         {
-                            "x": 7.023180961608887,
+                            "x": 7.039999961853027,
                             "y": -0.021311938762664796,
-                            "z": -0.019422302022576333
+                            "z": -0.019999999552965165
                         }
                     ],
                     "unlockableAreaPrefabTransformRotation": [
