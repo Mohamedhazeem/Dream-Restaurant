@@ -8,32 +8,35 @@
                     "moneyGetPlaces": [
                         {
                             "getPlaces": {
-                                "instanceID": 52008
-                            }
+                                "instanceID": -71446
+                            },
+                            "name": "MoneyPlace"
                         }
                     ],
                     "moneySpendPlaceToUnlockObjects": [
                         {
                             "spendPlacesToUnlockObject": {
-                                "instanceID": 51956
+                                "instanceID": -71640
                             },
                             "prefab": {
-                                "instanceID": 51988
+                                "instanceID": -72004
                             },
                             "count": 10,
-                            "restaurantObjects": 0
+                            "restaurantObjects": 0,
+                            "name": "MoneySpendToUnlockObject"
                         }
                     ],
                     "moneySpendPlaceToUnlockAreas": [
                         {
                             "spendPlacesToUnlockArea": {
-                                "instanceID": 52046
+                                "instanceID": -71528
                             },
                             "prefab": {
-                                "instanceID": 52044
+                                "instanceID": -72252
                             },
                             "count": 50,
-                            "unloackableAreas": 0
+                            "unloackableAreas": 0,
+                            "name": "MoneySpendToUnlockArea"
                         }
                     ],
                     "moneyGetPlacesTransformPosition": [
@@ -60,9 +63,9 @@
                     ],
                     "moneySpendToUnlockObjectTransformPosition": [
                         {
-                            "x": -1.090000033378601,
+                            "x": -1.409999966621399,
                             "y": 0.05000000074505806,
-                            "z": -1.5099999904632569
+                            "z": -2.5
                         }
                     ],
                     "moneySpendToUnlockObjectTransformRotation": [
@@ -82,9 +85,9 @@
                     ],
                     "unlockableObjectPrefabTransformPosition": [
                         {
-                            "x": 1.9290640354156495,
-                            "y": 0.27337023615837099,
-                            "z": -0.21417641639709474
+                            "x": 2.923882007598877,
+                            "y": 0.23000000417232514,
+                            "z": -0.10784781724214554
                         }
                     ],
                     "unlockableObjectPrefabTransformRotation": [
@@ -104,9 +107,9 @@
                     ],
                     "moneySpendToUnlockAreaTransformPosition": [
                         {
-                            "x": 3.619999885559082,
+                            "x": 1.909999966621399,
                             "y": 0.05000000074505806,
-                            "z": -0.8700000047683716
+                            "z": -0.05999999865889549
                         }
                     ],
                     "moneySpendToUnlockAreaTransformRotation": [
@@ -126,9 +129,9 @@
                     ],
                     "unlockableAreaPrefabTransformPosition": [
                         {
-                            "x": 7.039999961853027,
-                            "y": -0.021311938762664796,
-                            "z": -0.019999999552965165
+                            "x": 2.923882007598877,
+                            "y": 0.23000000417232514,
+                            "z": -0.10784781724214554
                         }
                     ],
                     "unlockableAreaPrefabTransformRotation": [
@@ -141,9 +144,9 @@
                     ],
                     "unlockableAreaPrefabTransformScale": [
                         {
-                            "x": 9.96115493774414,
-                            "y": 0.0426238514482975,
-                            "z": 4.046360492706299
+                            "x": 2.1626999378204347,
+                            "y": 0.5467399954795837,
+                            "z": 0.417279988527298
                         }
                     ]
                 }

@@ -73,7 +73,7 @@ public class LevelManager : MonoBehaviour
                    
                     for (int b = 0; b < data[i].gamePlayUis[a].moneyGetPlaces.Count; b++)
                     {
-                        var gameObject = LeanPool.Spawn(Resources.Load("MoneyPlaces/" + data[i].gamePlayUis[a].moneyGetPlaces[b].getPlaces.tag) as GameObject);
+                        var gameObject = LeanPool.Spawn(Resources.Load("MoneyPlaces/" + data[i].gamePlayUis[a].moneyGetPlaces[b].name) as GameObject);
 
                         gameObject.transform.position = data[i].gamePlayUis[a].moneyGetPlacesTransformPosition[b];
                         gameObject.transform.localScale = data[i].gamePlayUis[a].moneyGetPlacesTransformScale[b];
@@ -82,7 +82,7 @@ public class LevelManager : MonoBehaviour
                     int index = 0;
                     for (int b = 0; b < data[i].gamePlayUis[a].moneySpendPlaceToUnlockObjects.Count; b++)
                     {
-                        var gameObject = LeanPool.Spawn(Resources.Load("MoneyPlaces/" + data[i].gamePlayUis[a].moneySpendPlaceToUnlockObjects[b].spendPlacesToUnlockObject.tag) as GameObject);
+                        var gameObject = LeanPool.Spawn(Resources.Load("MoneyPlaces/" + data[i].gamePlayUis[a].moneySpendPlaceToUnlockObjects[b].name) as GameObject);
 
                         gameObject.transform.position = data[i].gamePlayUis[a].moneySpendToUnlockObjectTransformPosition[b];
                         gameObject.transform.localScale = data[i].gamePlayUis[a].moneySpendToUnlockObjectTransformScale[b];
@@ -97,7 +97,7 @@ public class LevelManager : MonoBehaviour
                     index = 0;
                     for (int b = 0; b < data[i].gamePlayUis[a].moneySpendPlaceToUnlockAreas.Count; b++)
                     {
-                        var gameObject = LeanPool.Spawn(Resources.Load("MoneyPlaces/" + data[i].gamePlayUis[a].moneySpendPlaceToUnlockAreas[b].spendPlacesToUnlockArea.tag) as GameObject);
+                        var gameObject = LeanPool.Spawn(Resources.Load("MoneyPlaces/" + data[i].gamePlayUis[a].moneySpendPlaceToUnlockAreas[b].name) as GameObject);
 
                         gameObject.transform.position = data[i].gamePlayUis[a].moneySpendToUnlockAreaTransformPosition[b];
                         gameObject.transform.localScale = data[i].gamePlayUis[a].moneySpendToUnlockAreaTransformScale[b];
@@ -240,6 +240,7 @@ public struct GamePlayUI
     {
         for (int i = 0; i < moneyGetPlaces.Count; i++)
         {
+            Debug.LogWarning(moneyGetPlaces[i].getPlaces);
             moneyGetPlacesTransformPosition.Add(moneyGetPlaces[i].getPlaces.transform.position);
             moneyGetPlacesTransformRotation.Add(moneyGetPlaces[i].getPlaces.transform.rotation);
             moneyGetPlacesTransformScale.Add(moneyGetPlaces[i].getPlaces.transform.localScale);
@@ -295,7 +296,8 @@ public struct GamePlayUI
 [System.Serializable]
 public struct MoneyGetPlace
 {
-    public GameObject getPlaces;    
+    public GameObject getPlaces;
+    public string name;
 }
 [System.Serializable]
 public struct MoneySpendPlaceToUnlockObject
@@ -304,6 +306,7 @@ public struct MoneySpendPlaceToUnlockObject
     public GameObject prefab;
     [HideInInspector] public int count;
     [HideInInspector] public RestaurantObjects restaurantObjects;
+    public string name;
 }
 [System.Serializable]
 public struct MoneyspendToUnlockArea
@@ -312,4 +315,5 @@ public struct MoneyspendToUnlockArea
     public GameObject prefab;
     [HideInInspector] public int count;
     [HideInInspector] public UnloackableAreas unloackableAreas;
+    public string name;
 }

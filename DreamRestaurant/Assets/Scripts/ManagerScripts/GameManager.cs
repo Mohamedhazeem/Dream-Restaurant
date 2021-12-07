@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.Win:
-                UserDataManager.instance.SaveCurrentLevelCount();
+
 
                 break;
 
