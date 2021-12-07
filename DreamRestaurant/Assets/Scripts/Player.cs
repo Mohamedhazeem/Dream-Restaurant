@@ -7,8 +7,10 @@ public class Player : MonoBehaviour
     public Rigidbody playerRigidbody;
     [Header("Animator")]
     public Animator animator;
-    [Header("Spend Place")]
-    private SpendPlace spendPlace;
+    [Header("Spend Place For Unlockobject")]
+    public SpendPlaceForUnlockObject spendPlaceToUnlockObject;
+    [Header("Spend Place for Unlock Area")]
+    public SpendPlaceForUnlockArea spendPlaceToUnlockArea;
     [Header("Move Speed")]
     public float speed;
     [Header("Rotate Speed")]
@@ -66,9 +68,15 @@ public class Player : MonoBehaviour
             StartCoroutine(GetMoney());
             isTrigger = true;
         }
-        else if (other.CompareTag("MoneySpend") && !isSpendtrigger)
+        //else if (other.CompareTag("MoneySpendToUnlockObject") && !isSpendtrigger)
+        //{
+        //    spendPlaceToUnlockObject = other.GetComponent<SpendPlaceForUnlockObject>();
+        //    StartCoroutine(GiveMoney());
+        //    isSpendtrigger = true;
+        //}
+        else if (other.CompareTag("MoneySpendToUnlockArea") && !isSpendtrigger)
         {
-            spendPlace = other.GetComponent<SpendPlace>();
+            spendPlaceToUnlockArea = other.GetComponent<SpendPlaceForUnlockArea>();
             StartCoroutine(GiveMoney());
             isSpendtrigger = true;
         }
@@ -80,10 +88,16 @@ public class Player : MonoBehaviour
             isTrigger = false;
             StopAllCoroutines();
         }
-        else if (other.CompareTag("MoneySpend"))
+        else if (other.CompareTag("MoneySpendToUnlockObject"))
         {
             StopAllCoroutines();
-            spendPlace = null;
+            spendPlaceToUnlockObject = null;
+            isSpendtrigger = false;
+        }
+        else if (other.CompareTag("MoneySpendToUnlockArea"))
+        {
+            StopAllCoroutines();
+            spendPlaceToUnlockArea = null;
             isSpendtrigger = false;
         }
     }
@@ -116,13 +130,21 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(1f);
         while (true)
         {
-            if(PlayerManager.Instance.moneyStack.Count>0 && spendPlace.count>=0)
+            //if(PlayerManager.Instance.moneyStack.Count>0 && spendPlaceToUnlockObject.moneyAmount>=0)
+            //{
+            //    stackObject = PlayerManager.Instance.moneyStack.Pop();
+            //    MoneyManager.Instance.RemoveMoney(stackObject);
+            //    lastMoneyposition = PlayerManager.Instance.lastMoneyPosition.Pop();
+            //    lastMoneyposition -= stackMoneyOffset;
+            //    spendPlaceToUnlockObject.ReduceAmount();
+            //}
+            if(PlayerManager.Instance.moneyStack.Count > 0 && spendPlaceToUnlockArea.moneyAmount >= 0)
             {
                 stackObject = PlayerManager.Instance.moneyStack.Pop();
                 MoneyManager.Instance.RemoveMoney(stackObject);
                 lastMoneyposition = PlayerManager.Instance.lastMoneyPosition.Pop();
                 lastMoneyposition -= stackMoneyOffset;
-                spendPlace.ReduceAmount();
+                spendPlaceToUnlockArea.ReduceAmount();
             }
             else if(PlayerManager.Instance.moneyStack.Count <= 0)
             {

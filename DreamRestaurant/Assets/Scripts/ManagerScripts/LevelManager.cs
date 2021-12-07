@@ -6,7 +6,6 @@ public class LevelManager : MonoBehaviour
 {
     public static LevelManager Instance;
     public int checkLevel;
-
     public int currentLevel, levelCount;
     public const int TOTALLEVELS = 10;
     public GameObject loadedLevel;
@@ -54,7 +53,6 @@ public class LevelManager : MonoBehaviour
             {
                 var objectCount = data[i].objectsInLevels.Count;
                 var GameUiCount = data[i].gamePlayUis.Count;
-
                 for (int j = 0; j < objectCount; j++)
                 {
 
@@ -69,23 +67,47 @@ public class LevelManager : MonoBehaviour
                     }
 
                 }
+                
                 for (int a = 0; a < GameUiCount; a++)
                 {
+                   
                     for (int b = 0; b < data[i].gamePlayUis[a].moneyGetPlaces.Count; b++)
                     {
                         var gameObject = LeanPool.Spawn(Resources.Load("MoneyPlaces/" + data[i].gamePlayUis[a].moneyGetPlaces[b].getPlaces.tag) as GameObject);
 
-                        gameObject.transform.position = data[i].gamePlayUis[a].moneyPlacesTransformPosition[b];
-                        gameObject.transform.localScale = data[i].gamePlayUis[a].moneyPlacesTransformScale[b];
-                        gameObject.transform.rotation = data[i].gamePlayUis[a].moneyPlacesTransformRotation[b];
+                        gameObject.transform.position = data[i].gamePlayUis[a].moneyGetPlacesTransformPosition[b];
+                        gameObject.transform.localScale = data[i].gamePlayUis[a].moneyGetPlacesTransformScale[b];
+                        gameObject.transform.rotation = data[i].gamePlayUis[a].moneyGetPlacesTransformRotation[b];
                     }
-                    for (int c = 0; c < data[i].gamePlayUis[a].moneySpendPlaces.Count; c++)
+                    int index = 0;
+                    for (int b = 0; b < data[i].gamePlayUis[a].moneySpendPlaceToUnlockObjects.Count; b++)
                     {
-                        var gameObject = LeanPool.Spawn(Resources.Load("MoneyPlaces/" + data[i].gamePlayUis[a].moneySpendPlaces[c].spendPlaces.tag) as GameObject);
+                        var gameObject = LeanPool.Spawn(Resources.Load("MoneyPlaces/" + data[i].gamePlayUis[a].moneySpendPlaceToUnlockObjects[b].spendPlacesToUnlockObject.tag) as GameObject);
 
-                        gameObject.transform.position = data[i].gamePlayUis[a].spendPlacesTransformPosition[c];
-                        gameObject.transform.localScale = data[i].gamePlayUis[a].spendPlacesTransformScale[c];
-                        gameObject.transform.rotation = data[i].gamePlayUis[a].spendPlacesTransformRotation[c];
+                        gameObject.transform.position = data[i].gamePlayUis[a].moneySpendToUnlockObjectTransformPosition[b];
+                        gameObject.transform.localScale = data[i].gamePlayUis[a].moneySpendToUnlockObjectTransformScale[b];
+                        gameObject.transform.rotation = data[i].gamePlayUis[a].moneySpendToUnlockObjectTransformRotation[b];
+
+                        var spendplace = gameObject.GetComponent<SpendPlaceForUnlockObject>();
+                        spendplace.moneyAmount = data[i].gamePlayUis[a].moneySpendPlaceToUnlockObjects[b].count;
+                        spendplace.index = index;
+                        spendplace.restaurantObjects = data[i].gamePlayUis[a].moneySpendPlaceToUnlockObjects[b].restaurantObjects;
+                        index++;
+                    }
+                    index = 0;
+                    for (int b = 0; b < data[i].gamePlayUis[a].moneySpendPlaceToUnlockAreas.Count; b++)
+                    {
+                        var gameObject = LeanPool.Spawn(Resources.Load("MoneyPlaces/" + data[i].gamePlayUis[a].moneySpendPlaceToUnlockAreas[b].spendPlacesToUnlockArea.tag) as GameObject);
+
+                        gameObject.transform.position = data[i].gamePlayUis[a].moneySpendToUnlockAreaTransformPosition[b];
+                        gameObject.transform.localScale = data[i].gamePlayUis[a].moneySpendToUnlockAreaTransformScale[b];
+                        gameObject.transform.rotation = data[i].gamePlayUis[a].moneySpendToUnlockAreaTransformRotation[b];
+
+                        var spendplace = gameObject.GetComponent<SpendPlaceForUnlockArea>();
+                        spendplace.moneyAmount = data[i].gamePlayUis[a].moneySpendPlaceToUnlockObjects[b].count;
+                        spendplace.index = index;
+                        spendplace.unloackableAreas = data[i].gamePlayUis[a].moneySpendPlaceToUnlockAreas[b].unloackableAreas;
+                        index++;
                     }
                 }
             }
@@ -120,7 +142,7 @@ public class LevelManager : MonoBehaviour
         string load = SaveLevelDesign.Load();
 
         data = JsonHelper.ListFromJson<LevelData>(load);
-
+        
        // AssignLevelData(data);
     }
 
@@ -144,11 +166,13 @@ public class LevelManager : MonoBehaviour
             for (int j = 0; j < levelData[i].objectsInLevels.Count; j++)
             {
                 levelData[i].objectsInLevels[j].AssignSceneObjectsTransform();
+                
             }
             for (int k = 0; k < levelData[i].gamePlayUis.Count; k++)
             {
                 levelData[i].gamePlayUis[k].AssignUIObjectsTransform();
-                levelData[i].gamePlayUis[k].AssignSpendPlaceData();
+                levelData[i].gamePlayUis[k].AssignSpendPlaceToUnlockObjectData();
+                levelData[i].gamePlayUis[k].AssignSpendPlaceTounlockAreaData();
             }
         }
     }
@@ -175,7 +199,7 @@ public struct ObjectsInLevel
     public void AssignSceneObjectsTransform()
     {
         for (int i = 0; i < sceneObjects.Count; i++)
-        {
+        {            
             sceneObjectTransformPosition.Add(sceneObjects[i].transform.position);
             sceneObjectTransformRotation.Add(sceneObjects[i].transform.rotation);
             sceneObjectTransformScale.Add(sceneObjects[i].transform.localScale);
@@ -186,42 +210,85 @@ public struct ObjectsInLevel
 public struct GamePlayUI
 {
     [SerializeField] private string GamePlayUIname;
-    //public List<GameObject> moneyPlaces;
+
     public List<MoneyGetPlace> moneyGetPlaces;
-    //public List<GameObject> spendPlaces;
-    public List<MoneySpendPlace> moneySpendPlaces;
 
-    [HideInInspector] public List<Vector3> moneyPlacesTransformPosition;
-    [HideInInspector] public List<Quaternion> moneyPlacesTransformRotation;
-    [HideInInspector] public List<Vector3> moneyPlacesTransformScale;
+    public List<MoneySpendPlaceToUnlockObject> moneySpendPlaceToUnlockObjects;
 
-    [HideInInspector] public List<Vector3> spendPlacesTransformPosition;
-    [HideInInspector] public List<Quaternion> spendPlacesTransformRotation;
-    [HideInInspector] public List<Vector3> spendPlacesTransformScale;
+    public List<MoneyspendToUnlockArea> moneySpendPlaceToUnlockAreas;
+
+    [HideInInspector] public List<Vector3> moneyGetPlacesTransformPosition;
+    [HideInInspector] public List<Quaternion> moneyGetPlacesTransformRotation;
+    [HideInInspector] public List<Vector3> moneyGetPlacesTransformScale;
+
+    [HideInInspector] public List<Vector3> moneySpendToUnlockObjectTransformPosition;
+    [HideInInspector] public List<Quaternion> moneySpendToUnlockObjectTransformRotation;
+    [HideInInspector] public List<Vector3> moneySpendToUnlockObjectTransformScale;
+
+    [HideInInspector] public List<Vector3> unlockableObjectPrefabTransformPosition;
+    [HideInInspector] public List<Quaternion> unlockableObjectPrefabTransformRotation;
+    [HideInInspector] public List<Vector3> unlockableObjectPrefabTransformScale;
+
+    [HideInInspector] public List<Vector3> moneySpendToUnlockAreaTransformPosition;
+    [HideInInspector] public List<Quaternion> moneySpendToUnlockAreaTransformRotation;
+    [HideInInspector] public List<Vector3> moneySpendToUnlockAreaTransformScale;
+
+    [HideInInspector] public List<Vector3> unlockableAreaPrefabTransformPosition;
+    [HideInInspector] public List<Quaternion> unlockableAreaPrefabTransformRotation;
+    [HideInInspector] public List<Vector3> unlockableAreaPrefabTransformScale;
     public void AssignUIObjectsTransform()
     {
         for (int i = 0; i < moneyGetPlaces.Count; i++)
         {
-            moneyPlacesTransformPosition.Add(moneyGetPlaces[i].getPlaces.transform.position);
-            moneyPlacesTransformRotation.Add(moneyGetPlaces[i].getPlaces.transform.rotation);
-            moneyPlacesTransformScale.Add(moneyGetPlaces[i].getPlaces.transform.localScale);
+            moneyGetPlacesTransformPosition.Add(moneyGetPlaces[i].getPlaces.transform.position);
+            moneyGetPlacesTransformRotation.Add(moneyGetPlaces[i].getPlaces.transform.rotation);
+            moneyGetPlacesTransformScale.Add(moneyGetPlaces[i].getPlaces.transform.localScale);
         }
-        for (int j = 0; j < moneySpendPlaces.Count; j++)
+        for (int j = 0; j < moneySpendPlaceToUnlockObjects.Count; j++)
         {
-            spendPlacesTransformPosition.Add(moneySpendPlaces[j].spendPlaces.transform.position);
-            spendPlacesTransformRotation.Add(moneySpendPlaces[j].spendPlaces.transform.rotation);
-            spendPlacesTransformScale.Add(moneySpendPlaces[j].spendPlaces.transform.localScale);
+            moneySpendToUnlockObjectTransformPosition.Add(moneySpendPlaceToUnlockObjects[j].spendPlacesToUnlockObject.transform.position);
+            moneySpendToUnlockObjectTransformRotation.Add(moneySpendPlaceToUnlockObjects[j].spendPlacesToUnlockObject.transform.rotation);
+            moneySpendToUnlockObjectTransformScale.Add(moneySpendPlaceToUnlockObjects[j].spendPlacesToUnlockObject.transform.localScale);
+
+            unlockableObjectPrefabTransformPosition.Add(moneySpendPlaceToUnlockObjects[j].prefab.transform.position);
+            unlockableObjectPrefabTransformRotation.Add(moneySpendPlaceToUnlockObjects[j].prefab.transform.rotation);
+            unlockableObjectPrefabTransformScale.Add(moneySpendPlaceToUnlockObjects[j].prefab.transform.localScale);
+        }
+        for (int k = 0; k < moneySpendPlaceToUnlockAreas.Count; k++)
+        {
+            moneySpendToUnlockAreaTransformPosition.Add(moneySpendPlaceToUnlockAreas[k].spendPlacesToUnlockArea.transform.position);
+            moneySpendToUnlockAreaTransformRotation.Add(moneySpendPlaceToUnlockAreas[k].spendPlacesToUnlockArea.transform.rotation);
+            moneySpendToUnlockAreaTransformScale.Add(moneySpendPlaceToUnlockAreas[k].spendPlacesToUnlockArea.transform.localScale);
+
+            unlockableAreaPrefabTransformPosition.Add(moneySpendPlaceToUnlockAreas[k].prefab.transform.position);
+            unlockableAreaPrefabTransformRotation.Add(moneySpendPlaceToUnlockAreas[k].prefab.transform.rotation);
+            unlockableAreaPrefabTransformScale.Add(moneySpendPlaceToUnlockAreas[k].prefab.transform.localScale);
+
         }
     }
-    public void AssignSpendPlaceData()
+    public void AssignSpendPlaceToUnlockObjectData()
     {
-        for (int i = 0; i < moneySpendPlaces.Count; i++)
+        for (int i = 0; i < moneySpendPlaceToUnlockObjects.Count; i++)
         {
-            SpendPlace spendPlace = moneySpendPlaces[i].spendPlaces.GetComponent<SpendPlace>();
-            MoneySpendPlace moneySpendPlace = moneySpendPlaces[i];
-            moneySpendPlace.count = spendPlace.count;
-            moneySpendPlace.restaurantObjects = spendPlace.restaurantObjects;
-            moneySpendPlaces[i] = moneySpendPlace;
+            SpendPlaceForUnlockObject spendPlace = moneySpendPlaceToUnlockObjects[i].spendPlacesToUnlockObject.GetComponent<SpendPlaceForUnlockObject>();
+            MoneySpendPlaceToUnlockObject moneySpendPlaceToUnlockObject = moneySpendPlaceToUnlockObjects[i];
+            moneySpendPlaceToUnlockObject.count = spendPlace.moneyAmount;
+
+            moneySpendPlaceToUnlockObject.restaurantObjects = spendPlace.restaurantObjects;
+            moneySpendPlaceToUnlockObjects[i] = moneySpendPlaceToUnlockObject;
+        }
+
+    }
+    public void AssignSpendPlaceTounlockAreaData()
+    {
+        for (int i = 0; i < moneySpendPlaceToUnlockAreas.Count; i++)
+        {
+            SpendPlaceForUnlockArea spendPlace = moneySpendPlaceToUnlockAreas[i].spendPlacesToUnlockArea.GetComponent<SpendPlaceForUnlockArea>();
+            MoneyspendToUnlockArea moneySpendPlaceToUnlockObject = moneySpendPlaceToUnlockAreas[i];
+            moneySpendPlaceToUnlockObject.count = spendPlace.moneyAmount;
+
+            moneySpendPlaceToUnlockObject.unloackableAreas = spendPlace.unloackableAreas;
+            moneySpendPlaceToUnlockAreas[i] = moneySpendPlaceToUnlockObject;
         }
     }
 }
@@ -231,9 +298,18 @@ public struct MoneyGetPlace
     public GameObject getPlaces;    
 }
 [System.Serializable]
-public struct MoneySpendPlace
+public struct MoneySpendPlaceToUnlockObject
 {
-    public GameObject spendPlaces;
+    public GameObject spendPlacesToUnlockObject;
+    public GameObject prefab;
     [HideInInspector] public int count;
     [HideInInspector] public RestaurantObjects restaurantObjects;
+}
+[System.Serializable]
+public struct MoneyspendToUnlockArea
+{
+    public GameObject spendPlacesToUnlockArea;
+    public GameObject prefab;
+    [HideInInspector] public int count;
+    [HideInInspector] public UnloackableAreas unloackableAreas;
 }

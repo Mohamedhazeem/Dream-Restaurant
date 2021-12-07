@@ -37,7 +37,10 @@ public class MoneyManager : MonoBehaviour
 // enum name must be same name as resources folder prefab name
 public enum RestaurantObjects
 {
-    UnlockableArea,
     DinningTable
+}
+public enum UnloackableAreas
+{
+    Kitchen
 }
 

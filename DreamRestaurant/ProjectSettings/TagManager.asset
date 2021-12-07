@@ -6,7 +6,8 @@ TagManager:
   tags:
   - MoneyPlace
   - Money
-  - SpendPlace
+  - MoneySpendToUnlockObject
+  - MoneySpendToUnlockArea
   layers:
   - Default
   - TransparentFX

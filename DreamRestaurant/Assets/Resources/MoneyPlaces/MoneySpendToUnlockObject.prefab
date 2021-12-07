@@ -112,10 +112,10 @@ GameObject:
   - component: {fileID: 7855058890350660556}
   - component: {fileID: 7855058890350660557}
   - component: {fileID: 7855058890350660562}
-  - component: {fileID: 7855058890350660558}
+  - component: {fileID: 1934520084286553302}
   m_Layer: 0
-  m_Name: MoneySpend
-  m_TagString: MoneySpend
+  m_Name: MoneySpendToUnlockObject
+  m_TagString: MoneySpendToUnlockObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -207,7 +207,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7855058890350660563}
   m_CullTransparentMesh: 0
---- !u!114 &7855058890350660558
+--- !u!114 &1934520084286553302
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -216,9 +216,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7855058890350660563}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e39b10a2cc8a0d24a99689eddf8cba80, type: 3}
+  m_Script: {fileID: 11500000, guid: 908bd14aa208d00448713f15eadf0ec3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TextMesh: {fileID: 7855058889620515033}
-  count: 11
-  restaurantObjects: 1
+  TextMesh: {fileID: 0}
+  moneyAmount: 10
+  restaurantObjects: 0
