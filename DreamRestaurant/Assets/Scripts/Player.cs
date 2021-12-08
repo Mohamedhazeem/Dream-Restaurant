@@ -41,7 +41,8 @@ public class Player : MonoBehaviour
         move.y = 0;
         move.z = vertical * speed;
         playerRigidbody.velocity = move;
-        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.AngleAxis(InputManager.Instance.angle, Vector3.up), Time.deltaTime * rotateSpeed);
+        
+        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.AngleAxis(InputManager.Instance.angle, Vector3.up),Time.deltaTime* rotateSpeed);        
         PlayMoveAnimation();
     }
 
